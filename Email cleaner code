@@ -1,0 +1,32 @@
+import pandas as pd
+names = pd.read_csv("Names.csv")
+names.head()
+names.dropna(axis = 1)
+my_mail = names["Email"].str.split(";", expand = True)
+my_mail.head()
+my_mail.loc[(1 , 1 )]
+convert = my_mail.transpose()
+convert.rename(mapper = {0: "NameA", 1: "NameB", 2: "NameC"},axis = "columns", inplace = True)
+convert["NameA"].str.lstrip().str.rstrip()
+# Name A
+convert[["SecondNameA", "nx"]] = convert["NameA"].str.split(",",expand = True)
+convert["FirstNameA"] = convert["nx"].str.split("<").str.get(0)
+convert["EmailA"] = convert["nx"].str.split("<").str.get(1).str.replace(">","")
+
+# Name B
+
+convert[["SecondNameB", "ny"]] = convert["NameB"].str.split(",",expand = True)
+convert["FirstNameB"] = convert["ny"].str.split("<").str.get(0)
+convert["EmailB"] = convert["ny"].str.split("<").str.get(1).str.replace(">","")
+
+# NameC
+
+convert[["SecondNameC", "nz"]] = convert["NameC"].str.split(",",expand = True)
+convert["FirstNameC"] = convert["nz"].str.split("<").str.get(0)
+convert["EmailC"] = convert["nz"].str.split("<").str.get(1).str.replace(">","")
+convert
+
+convert.to_csv("Email_Report", index = False)
+excel_file = pd.ExcelWriter("Email_Report_v1.xlsx")
+convert.to_excel(excel_file , index = False , encoding = "utf-8")
+excel_file.save()
